@@ -1,0 +1,14 @@
+{
+  "name": "dolphin-zone-translator",
+  "version": "1.0.0",
+  "description": "A package to translate English to Dolphin language and vice versa.",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "deno test"
+  },
+  "keywords": ["dolphin", "translation", "language"],
+  "author": "sdv",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}
