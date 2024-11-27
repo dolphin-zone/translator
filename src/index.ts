@@ -176,6 +176,7 @@ const PATTERNS = [
   /\p{Extended_Pictographic}/gu, // Emoji
   /([a-z0-9-]+\.)+[a-z]{2,}/gi, // Domain
   /@[a-zA-Z0-9][a-zA-Z0-9_.-]*/g, // Username
+  /\/[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?/g, // Channel
 ];
 
 /**

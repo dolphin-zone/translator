@@ -83,3 +83,10 @@ Deno.test("Dolphin with complex sentence => English", () => {
     "follow-me @anondolphin on-finspace-and-check-out dolphin.cool 🐬🐬🐬 🐬🐬 🐬 https://dolphin.cool/some/long/url/to/nowhere.html";
   assertEquals(translate(input), expected);
 });
+
+Deno.test("Dolphin with channel => English", () => {
+  const input =
+    "EeEE E e EEE e Ee EeEE eEe eee eE /dolphin-zone EeEE Ee e E EeE e eee eEE Ee eEee";
+  const expected = "letstalkon /dolphin-zone latertoday";
+  assertEquals(translate(input), expected);
+});
