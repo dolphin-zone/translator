@@ -111,18 +111,18 @@ export function translate(input: string, options?: FilterOptions): string {
  * @returns True if text appears to be dolphinspeak
  */
 export function isDolphin(input: string): boolean {
-  const totalChars = input.length;
-  if (totalChars === 0) return false;
+  if (!input) return false;
 
-  const eCount = (input.match(/E/g) || []).length;
-  const spaceCount = (input.match(/ /g) || []).length;
+  // Split into words
+  const words = input.split(/\s+/).filter((word) => word.length > 0);
+  if (words.length === 0) return false;
 
-  // Calculate ratios
-  const eRatio = eCount / totalChars;
-  const spaceRatio = spaceCount / totalChars;
+  // Count words that only contain e/E
+  const eWords = words.filter((word) => /^[eE]+$/.test(word));
+  const regularWords = words.length - eWords.length;
 
-  // Dolphin text typically has >25% E's and >20% spaces
-  return eRatio > 0.25 && spaceRatio > 0.16;
+  // Dolphin text has more e-only words than regular words
+  return eWords.length > regularWords;
 }
 
 /**
