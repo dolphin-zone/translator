@@ -1,3 +1,4 @@
+/** Mapping of characters to their dolphinspeak equivalents */
 export const dolphinMap: { [key: string]: string } = {
   "a": "Ee",
   "b": "eEEE",
@@ -57,6 +58,7 @@ export const dolphinMap: { [key: string]: string } = {
   "¡": "eEeEe",
 };
 
+/** Mapping of swear words to their dolphin-friendly alternatives */
 export const dolphinSwearMap: { [key: string]: string } = {
   "fucking": "flipping",
   "fucked": "flipped",
@@ -83,6 +85,12 @@ export interface FilterOptions {
   };
 }
 
+/**
+ * Translates text between human and dolphinspeaks
+ * @param input The text to translate
+ * @param options Optional configuration for translation behavior
+ * @returns The translated text
+ */
 export function translate(input: string, options?: FilterOptions): string {
   // Auto-detect direction if not specified
   const toDolphin = options?.toDolphin ?? !isDolphin(input);
@@ -97,6 +105,11 @@ export function translate(input: string, options?: FilterOptions): string {
   }
 }
 
+/**
+ * Detects if input text is in dolphinspeak
+ * @param input The text to analyze
+ * @returns True if text appears to be dolphinspeak
+ */
 export function isDolphin(input: string): boolean {
   const totalChars = input.length;
   if (totalChars === 0) return false;
@@ -112,6 +125,12 @@ export function isDolphin(input: string): boolean {
   return eRatio > 0.25 && spaceRatio > 0.16;
 }
 
+/**
+ * Applies content filters to input text
+ * @param input The text to clean
+ * @param options Optional filtering options
+ * @returns The cleaned text
+ */
 function formatAndCleanInput(input: string, options?: FilterOptions): string {
   if (!options) return input;
 
@@ -141,11 +160,17 @@ function formatAndCleanInput(input: string, options?: FilterOptions): string {
   return output;
 }
 
+/**
+ * Checks if a character is whitespace (excluding 'e'/'E')
+ * @param char The character to check
+ * @returns True if character is whitespace
+ */
 function isWhitespace(char: string): boolean {
   if (char === "e" || char === "E") return false;
   return char === " " || char === "\n" || char === "\r";
 }
 
+/** Regular expression patterns for special text elements */
 const PATTERNS = [
   /(https?:\/\/)?([a-z0-9]+\.)+[a-z]{2,}(\/\S*)?/gi, // URL
   /\p{Extended_Pictographic}/gu, // Emoji
@@ -153,6 +178,11 @@ const PATTERNS = [
   /@[a-zA-Z0-9][a-zA-Z0-9_.-]*/g, // Username
 ];
 
+/**
+ * Converts human text to dolphinspeak
+ * @param input The text to encode
+ * @returns The dolphinspeak text
+ */
 function encodeDolphin(input: string): string {
   let output = "";
   let i = 0;
@@ -188,6 +218,11 @@ function encodeDolphin(input: string): string {
   return output.trim();
 }
 
+/**
+ * Converts dolphinspeak back to human text
+ * @param input The dolphinspeak text to decode
+ * @returns The human language text
+ */
 function decodeDolphin(input: string): string {
   let output = "";
   const words = input.split(/(?<=\n)|(?=\n)|[ ]/).filter((word) => word !== "");
