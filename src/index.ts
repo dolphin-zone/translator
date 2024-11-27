@@ -83,22 +83,6 @@ export interface FilterOptions {
   };
 }
 
-const reverseDolphinMap = Object.fromEntries(
-  Object.entries(dolphinMap).map(([k, v]) => [v, k]),
-);
-
-const FILTER_PATTERN_SWEAR = new RegExp(
-  Object.keys(dolphinSwearMap).join("|"),
-  "gi",
-);
-
-const PATTERNS = [
-  /(https?:\/\/)?([a-z0-9]+\.)+[a-z]{2,}(\/\S*)?/gi, // URL
-  /\p{Extended_Pictographic}/gu, // Emoji
-  /([a-z0-9-]+\.)+[a-z]{2,}/gi, // Domain
-  /@[a-zA-Z0-9][a-zA-Z0-9_.-]*/g, // Username
-];
-
 export function translate(input: string, options?: FilterOptions): string {
   // Auto-detect direction if not specified
   const toDolphin = options?.toDolphin ?? !isDolphin(input);
@@ -135,9 +119,15 @@ function formatAndCleanInput(input: string, options?: FilterOptions): string {
 
   // Apply swear filter
   if (options?.swearFilter) {
-    output = output.replace(FILTER_PATTERN_SWEAR, (match) => {
-      return dolphinSwearMap[match.toLowerCase()] || match;
-    });
+    output = output.replace(
+      new RegExp(
+        Object.keys(dolphinSwearMap).join("|"),
+        "gi",
+      ),
+      (match: string) => {
+        return dolphinSwearMap[match.toLowerCase()] || match;
+      },
+    );
   }
 
   // Apply custom filter if provided
@@ -155,6 +145,13 @@ function isWhitespace(char: string): boolean {
   if (char === "e" || char === "E") return false;
   return char === " " || char === "\n" || char === "\r";
 }
+
+const PATTERNS = [
+  /(https?:\/\/)?([a-z0-9]+\.)+[a-z]{2,}(\/\S*)?/gi, // URL
+  /\p{Extended_Pictographic}/gu, // Emoji
+  /([a-z0-9-]+\.)+[a-z]{2,}/gi, // Domain
+  /@[a-zA-Z0-9][a-zA-Z0-9_.-]*/g, // Username
+];
 
 function encodeDolphin(input: string): string {
   let output = "";
@@ -194,6 +191,9 @@ function encodeDolphin(input: string): string {
 function decodeDolphin(input: string): string {
   let output = "";
   const words = input.split(/(?<=\n)|(?=\n)|[ ]/).filter((word) => word !== "");
+  const reverseDolphinMap = Object.fromEntries(
+    Object.entries(dolphinMap).map(([k, v]) => [v, k]),
+  );
 
   for (const word of words) {
     if (reverseDolphinMap[word]) {
