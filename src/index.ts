@@ -75,7 +75,7 @@ export const dolphinSwearMap: { [key: string]: string } = {
 };
 
 export interface FilterOptions {
-  direction?: "toDolphin" | "fromDolphin";
+  toDolphin?: boolean;
   swearFilter?: boolean;
   customFilter?: {
     pattern: RegExp;
@@ -100,11 +100,11 @@ const PATTERNS = [
 ];
 
 export function translate(input: string, options?: FilterOptions): string {
-  // Auto-detect direction if not provided
-  const direction = options?.direction || detectLanguage(input);
+  // Auto-detect direction if not specified
+  const toDolphin = options?.toDolphin ?? !isDolphin(input);
 
   // Core translation
-  if (direction === "toDolphin") {
+  if (toDolphin) {
     const cleanedInput = formatAndCleanInput(input, options);
     return encodeDolphin(cleanedInput);
   } else {
@@ -113,9 +113,9 @@ export function translate(input: string, options?: FilterOptions): string {
   }
 }
 
-function detectLanguage(input: string): "toDolphin" | "fromDolphin" {
+export function isDolphin(input: string): boolean {
   const totalChars = input.length;
-  if (totalChars === 0) return "toDolphin";
+  if (totalChars === 0) return false;
 
   const eCount = (input.match(/E/g) || []).length;
   const spaceCount = (input.match(/ /g) || []).length;
@@ -125,7 +125,7 @@ function detectLanguage(input: string): "toDolphin" | "fromDolphin" {
   const spaceRatio = spaceCount / totalChars;
 
   // Dolphin text typically has >25% E's and >20% spaces
-  return (eRatio > 0.25 && spaceRatio > 0.16) ? "fromDolphin" : "toDolphin";
+  return eRatio > 0.25 && spaceRatio > 0.16;
 }
 
 function formatAndCleanInput(input: string, options?: FilterOptions): string {
